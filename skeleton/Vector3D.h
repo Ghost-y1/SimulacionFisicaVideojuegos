@@ -10,7 +10,7 @@ public:
 	float x, y, z;
 	
 	//constructor por defecto 
-	Vector3D(int x,int y, int z) : x(x = 0), y(y = 0), z(z = 0) {}
+	Vector3D(int x = 0,int y = 0, int z = 0) : x(x), y(y), z(z) {}
 
 	//constructor a traves de un PxVec3 de physx
 	Vector3D(physx::PxVec3 vec3) : x(vec3.x), y(vec3.y), z(vec3.z) {}
@@ -30,6 +30,9 @@ public:
 	//producto vectorial
 	Vector3D cross(const Vector3D& v) const;
 
+	// producto vectorial
+	static Vector3D cross(const Vector3D& v1, const Vector3D& v2);
+
 	//suma de vectores
 	Vector3D operator+(const Vector3D& v) const;
 
@@ -44,5 +47,6 @@ public:
 
 	//suma de vectores y asignacion
 	Vector3D& operator+=(const Vector3D& v);
+
 };
 

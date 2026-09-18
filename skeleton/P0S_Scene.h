@@ -3,6 +3,9 @@
 #include "Scene.h"
 #include "RenderUtils.hpp"
 #include <vector>
+#include "Vector3D.h"
+
+class Vector3D;
 
 class P0S_Scene : public Scene {
 public:
@@ -19,4 +22,6 @@ public:
 private:
     physx::PxTransform m_transform;
     RenderItem* m_renderItem{ nullptr };
+    RenderItem* m_renderItem2{ nullptr };
+    RenderItem* m_renderItem3{ nullptr };
 };
