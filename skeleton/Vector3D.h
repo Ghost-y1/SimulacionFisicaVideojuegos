@@ -10,7 +10,9 @@ public:
 	float x, y, z;
 	
 	//constructor por defecto 
-	Vector3D(int x = 0,int y = 0, int z = 0) : x(x), y(y), z(z) {}
+	Vector3D(float x = 0.0f, float y = 0.0f, float z = 0.0f)
+		: x(x), y(y), z(z) {
+	}
 
 	//constructor a traves de un PxVec3 de physx
 	Vector3D(physx::PxVec3 vec3) : x(vec3.x), y(vec3.y), z(vec3.z) {}

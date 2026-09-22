@@ -20,8 +20,14 @@ public:
     void cleanup() override;
 
 private:
+
     physx::PxTransform m_transform;
+    physx::PxTransform m_transformX;
+    physx::PxTransform m_transformY;
+    physx::PxTransform m_transformZ;
+
     RenderItem* m_renderItem{ nullptr };
+    RenderItem* m_renderItem1{ nullptr };
     RenderItem* m_renderItem2{ nullptr };
-    RenderItem* m_renderItem3{ nullptr };
+    RenderItem* m_renderItem3{ nullptr }; 
 };
