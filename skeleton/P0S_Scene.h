@@ -21,6 +21,17 @@ public:
 
 private:
 
+
+    physx::PxTransform m_transformP1;
+    physx::PxTransform m_transformP2;
+    physx::PxTransform m_transformP3;
+    physx::PxTransform m_transformP4;
+
+    RenderItem* m_renderP1 = nullptr;
+    RenderItem* m_renderP2 = nullptr;
+    RenderItem* m_renderP3 = nullptr;
+    RenderItem* m_renderP4 = nullptr;
+
     physx::PxTransform m_transform;
     physx::PxTransform m_transformX;
     physx::PxTransform m_transformY;
