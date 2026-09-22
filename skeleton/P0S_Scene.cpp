@@ -18,20 +18,20 @@ void P0S_Scene::init() {
 	);
 
 	/*
-	
+
 	//RETO A eje de coordenadas
 
-	// Creaci車n de una esfera 
+	// Creaci車n de una esfera
 	physx::PxShape* shape = CreateShape(physx::PxSphereGeometry(2.0f));
 	// Creaci車n de una esfera 2
 	physx::PxShape* shape2 = CreateShape(physx::PxSphereGeometry(2.0f));
 	// Creaci車n de una esfera 3
 	physx::PxShape* shape3 = CreateShape(physx::PxSphereGeometry(2.0f));
 
-	// Se registra el RenderItem 
+	// Se registra el RenderItem
 	//m_renderItem = new RenderItem(shape, &m_transform, Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 
-	// Creamos dos vectores del reto A de la practica 0 
+	// Creamos dos vectores del reto A de la practica 0
 	Vector3D vecX(3.0f, 1.0f, 0.0f);
 	Vector3D vecY(0.0f, 4.0f, 0.0f);
 
@@ -47,7 +47,7 @@ void P0S_Scene::init() {
 	vecX = vecX * 5.0f;
 	vecY = vecY * 5.0f;
 	vecW = vecW * 5.0f;
-	
+
 	m_transformX = physx::PxTransform(vecX.toPxVec3());
 	m_transformY = physx::PxTransform(vecY.toPxVec3());
 	m_transformZ = physx::PxTransform(vecW.toPxVec3());
@@ -92,13 +92,12 @@ void P0S_Scene::init() {
 	std::cout << "Dot P2: " << dotP2 << std::endl;
 	std::cout << "Dot P3: " << dotP3 << std::endl;
 	std::cout << "Dot P4: " << dotP4 << std::endl;
-	
+
 	// creamos los shape y el transform
-	physx::PxShape* shapeP1 = CreateShape(physx::PxSphereGeometry(0.5f));
+	physx::PxShape* shapeP1 = CreateShape(physx::PxSphereGeometry(0.5f)); 
 	physx::PxShape* shapeP2 = CreateShape(physx::PxSphereGeometry(0.5f));
 	physx::PxShape* shapeP3 = CreateShape(physx::PxSphereGeometry(0.5f));
 	physx::PxShape* shapeP4 = CreateShape(physx::PxSphereGeometry(0.5f));
-
 
 	m_transformP1 = physx::PxTransform(p1.toPxVec3());
 	m_transformP2 = physx::PxTransform(p2.toPxVec3());
@@ -111,7 +110,7 @@ void P0S_Scene::init() {
 	Vector4 colorP4;
 
 	// P1
-	if (dotP1 > 0) 
+	if (dotP1 > 0)
 		colorP1 = Vector4(0.0f, 1.0f, 0.0f, 1.0f); // Verde
 	else if (dotP1 < 0)
 		colorP1 = Vector4(1.0f, 0.0f, 0.0f, 1.0f); // Rojo
@@ -143,10 +142,10 @@ void P0S_Scene::init() {
 		colorP4 = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
 
 	// renderizamos los puntos objetivos
-	m_renderP1 = new RenderItem(shapeP1,&m_transformP1,colorP1);
-	m_renderP2 = new RenderItem(shapeP2,&m_transformP2,colorP2);
-	m_renderP3 = new RenderItem(shapeP3,&m_transformP3,colorP3);
-	m_renderP4 = new RenderItem(shapeP4,&m_transformP4,colorP4);
+	m_renderP1 = new RenderItem(shapeP1, &m_transformP1, colorP1);
+	m_renderP2 = new RenderItem(shapeP2, &m_transformP2, colorP2);
+	m_renderP3 = new RenderItem(shapeP3, &m_transformP3, colorP3);
+	m_renderP4 = new RenderItem(shapeP4, &m_transformP4, colorP4);
 }
 
 void P0S_Scene::update(double dt) {
@@ -163,10 +162,10 @@ void P0S_Scene::cleanup() {
 
 	// si existe un RenderItem registrado, se libera y se pone a nullptr
 	if (m_renderItem) {
-		m_renderItem->release(); 
+		m_renderItem->release();
 		m_renderItem = nullptr;
 	}
-	
+
 	/*
 	if (m_renderItem2)
 	{
