@@ -63,6 +63,7 @@ void P0S_Scene::init() {
 	m_renderItem3 = new RenderItem(shape3, &m_transformZ,  Vector4(0.0f, 0.0f, 1.0f, 1.0f));
 	*/
 
+	/*
 	// RETO B 
 
 	//posicion y direccion del enemigo 
@@ -146,6 +147,31 @@ void P0S_Scene::init() {
 	m_renderP2 = new RenderItem(shapeP2, &m_transformP2, colorP2);
 	m_renderP3 = new RenderItem(shapeP3, &m_transformP3, colorP3);
 	m_renderP4 = new RenderItem(shapeP4, &m_transformP4, colorP4);
+	*/
+
+	// RETO C
+	
+	// punto inicial y final
+
+	Vector3D A(-8.0f, 1.0f, -8.0f);
+	Vector3D B(8.0f, 8.0f, 8.0f);
+
+	for (int i = 0; i < NUM_LERP_POINTS; i++)
+	{
+		// desde 0 hasta 1
+		float t = (float)i / (NUM_LERP_POINTS - 1);
+
+		// P(t) = A + t(B - A)
+		Vector3D P = A + (B - A) * t;
+
+		m_transformLerp[i] = physx::PxTransform(P.toPxVec3());
+
+		// esfera 
+		physx::PxShape* shape = CreateShape(physx::PxSphereGeometry(0.3f));
+
+		m_renderLerp[i] = new RenderItem(shape,&m_transformLerp[i],Vector4(1.0f, 0.5f, 1.0f, 1.0f));
+
+	}
 }
 
 void P0S_Scene::update(double dt) {
@@ -180,27 +206,27 @@ void P0S_Scene::cleanup() {
 	}
 	*/
 
-	if (m_renderP1)
-	{
-		m_renderP1->release();
-		m_renderP1 = nullptr;
-	}
+	//if (m_renderP1)
+	//{
+	//	m_renderP1->release();
+	//	m_renderP1 = nullptr;
+	//}
 
-	if (m_renderP2)
-	{
-		m_renderP2->release();
-		m_renderP2 = nullptr;
-	}
+	//if (m_renderP2)
+	//{
+	//	m_renderP2->release();
+	//	m_renderP2 = nullptr;
+	//}
 
-	if (m_renderP3)
-	{
-		m_renderP3->release();
-		m_renderP3 = nullptr;
-	}
+	//if (m_renderP3)
+	//{
+	//	m_renderP3->release();
+	//	m_renderP3 = nullptr;
+	//}
 
-	if (m_renderP4)
-	{
-		m_renderP4->release();
-		m_renderP4 = nullptr;
-	}
+	//if (m_renderP4)
+	//{
+	//	m_renderP4->release();
+	//	m_renderP4 = nullptr;
+	//}
 }
