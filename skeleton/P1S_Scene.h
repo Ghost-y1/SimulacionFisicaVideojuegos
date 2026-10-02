@@ -6,7 +6,7 @@
 #include "Vector3D.h"
 #include "Particle.h"
 #include <array>
-
+#include <vector>
 
 class Vector3D;
 class Particle;
@@ -23,8 +23,12 @@ public:
 
     void cleanup() override;
 
+	void disparaProyectil(float speed, Vector3D acceleration);
+
 private:
     Particle* p1; 
+	std::vector<Particle*> proyectiles;
+
    // physx::PxTransform m_transform;
    // RenderItem* m_renderItem{ nullptr };
 
