@@ -5,8 +5,15 @@
 class Particle
 {
 public: 
-	Particle() {};
-	Particle(Vector3D position, Vector3D velocity, Vector3D force, float mass = 1.0f, float dumping = 1.0f);
+	Particle(
+		Vector3D position,
+		Vector3D velocity,
+		Vector3D acceleration,
+		float mass = 1.0f,
+		float damping = 1.0f
+	);
+	~Particle();
+
 	void integrate(float dt);
 
 private:
@@ -17,6 +24,6 @@ private:
 	float m_dumping;
 	float m_mass;
 	physx::PxTransform m_pose;
-	RenderItem* renderItem;
+	RenderItem* m_renderItem = nullptr;
 };
 
