@@ -44,7 +44,7 @@ void P1S_Scene::disparaProyectil(float speed,Vector3D acceleration)
 
     Vector3D velocity = GetCamera()->getDir() * speed;
 
-    Particle* p = new Particle(position,velocity,acceleration, masaSimulada);
+    Particle* p = new Particle(position,velocity,acceleration, masaSimulada, 0.5f, Vector4(1.0f,1.0f,0.5f,1.0f));
 
     proyectiles.push_back(p);
 }
