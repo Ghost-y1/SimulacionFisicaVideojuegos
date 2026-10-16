@@ -1,11 +1,10 @@
 #pragma once
 
 #include "Scene.h"
-#include "RenderUtils.hpp"
-#include "Vector3D.h"
-#include "Particle.h"
 #include "EmisorParticula.h"
+
 #include <vector>
+
 
 class P2S_Scene : public Scene
 {
@@ -27,7 +26,8 @@ public:
 
     void cleanup() override;
 
+
 private:
 
-
+    std::vector<EmisorParticula*> m_emitters;
 };
