@@ -15,6 +15,7 @@ Particle::Particle(
     : m_position(position),
     m_velocity(velocity),
     m_acceleration(acceleration),
+    m_forceAccum(0.0f, 0.0f, 0.0f),
     m_size(size),
     m_mass(mass),
     m_color(color),
@@ -44,30 +45,72 @@ Particle::~Particle()
 
 void Particle::integrate(float dt)
 {
-    // Euler semi-implícito
-    m_velocity += m_acceleration * dt;
+    // Aceleración producida por las fuerzas
+    Vector3D forceAcceleration(0.0f, 0.0f, 0.0f);
 
-    // Damping
-    m_velocity = m_velocity * std::pow(m_damping, dt);
+    if (m_mass > 0.0f)
+    {
+        forceAcceleration =
+            m_forceAccum * (1.0f / m_mass);
+    }
 
-    // Posición
+    // Sumamos:
+    // aceleración constante + aceleración causada por fuerzas
+    Vector3D totalAcceleration =
+        m_acceleration + forceAcceleration;
+
+
+    // Euler semiimplícito
+    m_velocity += totalAcceleration * dt;
+
+    m_velocity =
+        m_velocity * std::pow(m_damping, dt);
+
     m_position += m_velocity * dt;
 
-    // Aumentar edad
     m_age += dt;
 
-    // Actualizar render
-    m_pose = physx::PxTransform(m_position.toPxVec3());
+    m_pose =
+        physx::PxTransform(m_position.toPxVec3());
+
+
+    // MUY IMPORTANTE:
+    // las fuerzas solo pertenecen a este frame
+    clearForces();
 }
 
 
-bool Particle::isAlive() const
+void Particle::addForce(const Vector3D& force)
 {
-    return m_age < m_life;
+    m_forceAccum += force;
+}
+
+
+void Particle::clearForces()
+{
+    m_forceAccum = Vector3D(0.0f, 0.0f, 0.0f);
 }
 
 
 Vector3D Particle::getPosition() const
 {
     return m_position;
+}
+
+
+Vector3D Particle::getVelocity() const
+{
+    return m_velocity;
+}
+
+
+float Particle::getMass() const
+{
+    return m_mass;
+}
+
+
+bool Particle::isAlive() const
+{
+    return m_age < m_life;
 }

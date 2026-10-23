@@ -22,15 +22,28 @@ public:
 
     void integrate(float dt);
 
-    bool isAlive() const;
+    // Fuerzas
+    void addForce(const Vector3D& force);
+    void clearForces();
 
+    // Getters necesarios para los generadores
     Vector3D getPosition() const;
+    Vector3D getVelocity() const;
+
+    float getMass() const;
+
+    bool isAlive() const;
 
 private:
 
     Vector3D m_position;
     Vector3D m_velocity;
+
+    // Aceleración constante independiente de fuerzas
     Vector3D m_acceleration;
+
+    // Fuerzas acumuladas durante el frame
+    Vector3D m_forceAccum;
 
     Vector4 m_color;
 
@@ -38,11 +51,9 @@ private:
     float m_mass;
     float m_damping;
 
-    // Ciclo de vida
     float m_age;
     float m_life;
 
     physx::PxTransform m_pose;
-
     RenderItem* m_renderItem = nullptr;
 };

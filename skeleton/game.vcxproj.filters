@@ -18,6 +18,10 @@
     <ClCompile Include="P1S_Scene.cpp" />
     <ClCompile Include="P2S_Scene.cpp" />
     <ClCompile Include="EmisorParticula.cpp" />
+    <ClCompile Include="ForceGenerator.cpp" />
+    <ClCompile Include="GravityGenerator.cpp" />
+    <ClCompile Include="ParticleForceRegistry.cpp" />
+    <ClCompile Include="P3S_Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -38,6 +42,10 @@
     <ClInclude Include="P1S_Scene.h" />
     <ClInclude Include="P2S_Scene.h" />
     <ClInclude Include="EmisorParticula.h" />
+    <ClInclude Include="ForceGenerator.h" />
+    <ClInclude Include="GravityGenerator.h" />
+    <ClInclude Include="ParticleForceRegistry.h" />
+    <ClInclude Include="P3S_Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

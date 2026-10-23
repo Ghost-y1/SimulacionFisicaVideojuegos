@@ -2,6 +2,8 @@
 
 #include "Vector3D.h"
 #include "Particle.h"
+#include "ForceGenerator.h"
+#include "ParticleForceRegistry.h"
 
 #include <vector>
 #include <random>
@@ -26,34 +28,38 @@ public:
 
     ~EmisorParticula();
 
+    // Actualiza el sistema de partículas
     void update(float dt);
+
+    // Añade un generador de fuerzas al emisor
+    void addForceGenerator(ForceGenerator* generator);
+
+    // Establece una aceleración constante
+    void setAcceleration(const Vector3D& acceleration);
 
 private:
 
     // Genera nuevas partículas
     void emit();
 
-    // Elimina las muertas / fuera del área
+    // Elimina partículas muertas o fuera del área
     void removeDeadParticles();
 
-    // Velocidad aleatoria
+    // Genera una velocidad aleatoria
     Vector3D randomVelocity();
 
-    // Número de partículas de este frame
+    // Calcula cuántas partículas se generan este frame
     int randomParticleCount();
 
 
-private:
-
     std::vector<Particle*> m_particles;
 
-    // Posición fija del emisor
     Vector3D m_position;
 
-    // Velocidad media
+    // Velocidad media de salida
     Vector3D m_meanVelocity;
 
-    // Desviación estándar en X, Y, Z
+    // Variación de velocidad
     Vector3D m_velocityDeviation;
 
     Vector4 m_color;
@@ -63,16 +69,20 @@ private:
     float m_life;
     float m_damping;
 
-    // Partículas emitidas por frame
     int m_meanParticlesPerFrame;
     int m_variationParticlesPerFrame;
 
-    // Espacio de acción
     float m_maxDistance;
 
-    // Gravedad común
-    Vector3D m_gravity;
+    // Aceleración constante de las partículas
+    Vector3D m_acceleration;
 
-    // Generador aleatorio
+    // Generador de números aleatorios
     std::default_random_engine m_generator;
+
+    // Generadores de fuerza asociados
+    std::vector<ForceGenerator*> m_forceGenerators;
+
+    // Registro partícula-generador
+    ParticleForceRegistry m_forceRegistry;
 };
