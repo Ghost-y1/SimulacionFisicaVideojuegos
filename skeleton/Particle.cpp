@@ -50,31 +50,26 @@ void Particle::integrate(float dt)
 
     if (m_mass > 0.0f)
     {
-        forceAcceleration =
-            m_forceAccum * (1.0f / m_mass);
+        forceAcceleration = m_forceAccum * (1.0f / m_mass);
     }
 
-    // Sumamos:
-    // aceleración constante + aceleración causada por fuerzas
-    Vector3D totalAcceleration =
-        m_acceleration + forceAcceleration;
+    // sumamos aceleración constante + aceleración causada por fuerzas
+    Vector3D totalAcceleration = m_acceleration + forceAcceleration;
 
 
     // Euler semiimplícito
     m_velocity += totalAcceleration * dt;
 
-    m_velocity =
-        m_velocity * std::pow(m_damping, dt);
+    m_velocity = m_velocity * std::pow(m_damping, dt);
 
     m_position += m_velocity * dt;
 
+    // vida de la particula
     m_age += dt;
 
-    m_pose =
-        physx::PxTransform(m_position.toPxVec3());
+    // movemos la particula
+    m_pose = physx::PxTransform(m_position.toPxVec3());
 
-
-    // MUY IMPORTANTE:
     // las fuerzas solo pertenecen a este frame
     clearForces();
 }

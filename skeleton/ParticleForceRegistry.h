@@ -5,8 +5,7 @@
 #include "Particle.h"
 #include "ForceGenerator.h"
 
-// Registro que relaciona partículas con generadores de fuerzas.
-// Se encarga de aplicar a cada partícula todos los generadores
+// Registro que relaciona partículas con generadores de fuerzas y les aplica la fuerza.
 
 class ParticleForceRegistry
 {

@@ -7,6 +7,7 @@
 
 #include "ForceGenerator.h"
 #include "GravityGenerator.h"
+#include "WindGenerator.h"
 #include "ParticleForceRegistry.h"
 
 #include <vector>
@@ -42,9 +43,11 @@ private:
 
     EmisorParticula* m_emisorAceleracion = nullptr;
 
+    EmisorParticula* m_emisorViento = nullptr;
 
     GravityGenerator* m_gravedadNormal = nullptr;
 
     GravityGenerator* m_gravedadReducida = nullptr;
 
+    WindGenerator* m_windGenerator = nullptr;
 };

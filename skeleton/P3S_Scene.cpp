@@ -34,10 +34,7 @@ void P3S_Scene::init()
     );
 
 
-    m_emisorGravedadNormal->addForceGenerator(
-        m_gravedadNormal
-    );
-
+    m_emisorGravedadNormal->addForceGenerator(m_gravedadNormal);
 
     // Gravedad reducida
     m_emisorGravedadReducida = new EmisorParticula(
@@ -86,6 +83,31 @@ void P3S_Scene::init()
 
     m_emisorAceleracion->setAcceleration(Vector3D(0.0f,-10.0f,0.0f));
 
+    // ACTIVIDAD 2 - Viento
+
+    m_windGenerator = new WindGenerator(Vector3D(10.0f, 0.0f, 0.0f),5.0f,5.0f);
+
+    // emisor afectado por el viento
+    m_emisorViento = new EmisorParticula(
+        Vector3D(-8.0f, 10.0f, 0.0f),
+        Vector3D(0.0f, 12.0f, 0.0f),
+        Vector3D(1.0f, 1.0f, 1.0f),
+
+        Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+
+        0.25f,
+        1.0f,
+        5.0f,
+
+        2,
+        1,
+
+        0.99f,
+        30.0f
+    );
+
+    m_emisorViento->addForceGenerator(m_windGenerator);
+    m_emisorViento->addForceGenerator(m_gravedadNormal);
 }
 
 
@@ -100,6 +122,8 @@ void P3S_Scene::update(double dt)
     m_emisorGravedadReducida->update(deltaTime);
     m_emisorAceleracion->update(deltaTime);
 
+    // Actividad 2
+    m_emisorViento->update(deltaTime);
 
 }
 
@@ -126,6 +150,8 @@ void P3S_Scene::cleanup()
     delete m_emisorAceleracion;
     m_emisorAceleracion = nullptr;
 
+    delete m_emisorViento;
+    m_emisorViento = nullptr;
 
     // Generadores
     delete m_gravedadNormal;
@@ -134,4 +160,6 @@ void P3S_Scene::cleanup()
     delete m_gravedadReducida;
     m_gravedadReducida = nullptr;
 
+    delete m_windGenerator;
+    m_windGenerator = nullptr;
 }
