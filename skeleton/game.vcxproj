@@ -263,6 +263,7 @@
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="EmisorParticula.cpp" />
+    <ClCompile Include="ExplosionGenerator.cpp" />
     <ClCompile Include="GravityGenerator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="P0S_Scene.cpp" />
@@ -277,6 +278,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Vector3D.cpp" />
+    <ClCompile Include="VortexGenerator.cpp" />
     <ClCompile Include="WindGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +286,7 @@
     <ClInclude Include="core.hpp" />
     <ClInclude Include="EmisorParticula.h" />
     <ClInclude Include="EmptyScene.h" />
+    <ClInclude Include="ExplosionGenerator.h" />
     <ClInclude Include="ForceGenerator.h" />
     <ClInclude Include="GravityGenerator.h" />
     <ClInclude Include="P0S_Scene.h" />
@@ -298,6 +301,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Vector3D.h" />
+    <ClInclude Include="VortexGenerator.h" />
     <ClInclude Include="WindGenerator.h" />
   </ItemGroup>
   <ItemGroup>

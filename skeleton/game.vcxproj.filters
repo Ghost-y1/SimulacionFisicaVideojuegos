@@ -22,6 +22,8 @@
     <ClCompile Include="ParticleForceRegistry.cpp" />
     <ClCompile Include="P3S_Scene.cpp" />
     <ClCompile Include="WindGenerator.cpp" />
+    <ClCompile Include="ExplosionGenerator.cpp" />
+    <ClCompile Include="VortexGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -47,6 +49,8 @@
     <ClInclude Include="ParticleForceRegistry.h" />
     <ClInclude Include="P3S_Scene.h" />
     <ClInclude Include="WindGenerator.h" />
+    <ClInclude Include="ExplosionGenerator.h" />
+    <ClInclude Include="VortexGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

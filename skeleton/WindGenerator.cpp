@@ -1,16 +1,57 @@
 ﻿#include "WindGenerator.h"
 #include "Particle.h"
-void WindGenerator::updateForce(Particle* particle, float dt) {
 
-	Vector3D relativeForce = this->getWindVelocity() - particle->getVelocity();
 
-	Vector3D force = relativeForce * k1;
+WindGenerator::WindGenerator(
+    Vector3D windVelocity,
+    float k1,
+    float k2
+)
+    : m_windVelocity(windVelocity),
+    m_k1(k1),
+    m_k2(k2)
+{
+}
 
-	// parte opcional: si K2 no es 0
-	if (k1 != 0) {
-		force += relativeForce * (k2 * relativeForce.magnitude());
-	}
-	
-	// añadimos la fuerza al acumulador
-	particle->addForce(force);
+
+// En el viento uniforme la velocidad del aire
+// es la misma para todas las partículas.
+Vector3D WindGenerator::getWindVelocity(
+    Particle* particle
+) const
+{
+    return m_windVelocity;
+}
+
+
+// Calcula la fuerza producida por el viento.
+void WindGenerator::updateForce(
+    Particle* particle,
+    float dt
+)
+{
+    // Diferencia entre la velocidad del viento
+    // y la velocidad de la partícula.
+    Vector3D relativeVelocity =
+        getWindVelocity(particle)
+        - particle->getVelocity();
+
+
+    // Parte lineal:
+    // F = k1 * (Vviento - Vparticula)
+    Vector3D force =
+        relativeVelocity * m_k1;
+
+
+    // Parte cuadrática opcional.
+    if (m_k2 != 0.0f)
+    {
+        force +=
+            relativeVelocity *
+            (m_k2 * relativeVelocity.magnitude());
+    }
+
+
+    // Añadimos la fuerza al acumulador de la partícula.
+    particle->addForce(force);
 }
