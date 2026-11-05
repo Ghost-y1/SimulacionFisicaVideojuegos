@@ -5,7 +5,6 @@
 class VortexGenerator : public WindGenerator
 {
 public:
-
     VortexGenerator(
         Vector3D center,
         float strength,
@@ -13,22 +12,19 @@ public:
         float k1
     );
 
-protected:
+    Vector3D calculateForce(
+        const Particle& particle,
+        float dt
+    ) override;
 
-    // Calcula la velocidad del viento
-    // en función de la posición de la partícula
+protected:
     Vector3D getWindVelocity(
-        Particle* particle
+        const Particle& particle
     ) const override;
 
 private:
-
-    // Centro del torbellino
     Vector3D m_center;
 
-    // Intensidad del torbellino
     float m_strength;
-
-    // Radio de acción
     float m_radius;
 };

@@ -1,81 +1,113 @@
 #include "EmisorParticula.h"
 
-#include <algorithm>
-#include <cmath>
-#include <random>
-
-
 EmisorParticula::EmisorParticula(
+    Particle* model,
     Vector3D position,
+    Vector3D positionDeviation,
     Vector3D meanVelocity,
     Vector3D velocityDeviation,
-    Vector4 color,
-    float size,
-    float mass,
-    float life,
+    DistributionType distribution,
     int meanParticlesPerFrame,
-    int variationParticlesPerFrame,
-    float damping,
-    float maxDistance
+    int variationParticlesPerFrame
 )
-    : m_position(position),
+    : m_model(model),
+    m_position(position),
+    m_positionDeviation(positionDeviation),
     m_meanVelocity(meanVelocity),
     m_velocityDeviation(velocityDeviation),
-    m_acceleration(0.0f, 0.0f, 0.0f),
-    m_color(color),
-    m_size(size),
-    m_mass(mass),
-    m_life(life),
-    m_damping(damping),
+    m_distribution(distribution),
     m_meanParticlesPerFrame(meanParticlesPerFrame),
-    m_variationParticlesPerFrame(variationParticlesPerFrame),
-    m_maxDistance(maxDistance)
+    m_variationParticlesPerFrame(variationParticlesPerFrame)
 {
-    // Inicializa el generador aleatorio
     std::random_device rd;
     m_generator.seed(rd());
 }
 
-
 EmisorParticula::~EmisorParticula()
 {
-    // Libera todas las partículas
-    for (Particle* p : m_particles)
+    delete m_model;
+    m_model = nullptr;
+}
+
+Vector3D EmisorParticula::randomPosition()
+{
+    if (m_distribution == DistributionType::Uniform)
     {
-        delete p;
+        std::uniform_real_distribution<float> x(-m_positionDeviation.x, m_positionDeviation.x);
+        std::uniform_real_distribution<float> y(-m_positionDeviation.y, m_positionDeviation.y);
+        std::uniform_real_distribution<float> z(-m_positionDeviation.z, m_positionDeviation.z);
+
+        return m_position + Vector3D(
+            x(m_generator),
+            y(m_generator),
+            z(m_generator)
+        );
     }
 
-    m_particles.clear();
+    float x = 0.0f;
+    float y = 0.0f;
+    float z = 0.0f;
+
+    if (m_positionDeviation.x > 0.0f)
+    {
+        std::normal_distribution<float> distribution(0.0f, m_positionDeviation.x);
+        x = distribution(m_generator);
+    }
+
+    if (m_positionDeviation.y > 0.0f)
+    {
+        std::normal_distribution<float> distribution(0.0f, m_positionDeviation.y);
+        y = distribution(m_generator);
+    }
+
+    if (m_positionDeviation.z > 0.0f)
+    {
+        std::normal_distribution<float> distribution(0.0f, m_positionDeviation.z);
+        z = distribution(m_generator);
+    }
+
+    return m_position + Vector3D(x, y, z);
 }
 
-
-// Genera una velocidad aleatoria alrededor de la media
 Vector3D EmisorParticula::randomVelocity()
 {
-    std::normal_distribution<float> distributionX(
-        m_meanVelocity.x,
-        m_velocityDeviation.x
-    );
+    float x = m_meanVelocity.x;
+    float y = m_meanVelocity.y;
+    float z = m_meanVelocity.z;
 
-    std::normal_distribution<float> distributionY(
-        m_meanVelocity.y,
-        m_velocityDeviation.y
-    );
+    if (m_velocityDeviation.x > 0.0f)
+    {
+        std::normal_distribution<float> distribution(
+            m_meanVelocity.x,
+            m_velocityDeviation.x
+        );
 
-    std::normal_distribution<float> distributionZ(
-        m_meanVelocity.z,
-        m_velocityDeviation.z
-    );
+        x = distribution(m_generator);
+    }
 
-    return Vector3D(
-        distributionX(m_generator),
-        distributionY(m_generator),
-        distributionZ(m_generator)
-    );
+    if (m_velocityDeviation.y > 0.0f)
+    {
+        std::normal_distribution<float> distribution(
+            m_meanVelocity.y,
+            m_velocityDeviation.y
+        );
+
+        y = distribution(m_generator);
+    }
+
+    if (m_velocityDeviation.z > 0.0f)
+    {
+        std::normal_distribution<float> distribution(
+            m_meanVelocity.z,
+            m_velocityDeviation.z
+        );
+
+        z = distribution(m_generator);
+    }
+
+    return Vector3D(x, y, z);
 }
 
-
-// Calcula el número de partículas a emitir
 int EmisorParticula::randomParticleCount()
 {
     std::uniform_int_distribution<int> distribution(
@@ -84,8 +116,7 @@ int EmisorParticula::randomParticleCount()
     );
 
     int number =
-        m_meanParticlesPerFrame +
-        distribution(m_generator);
+        m_meanParticlesPerFrame + distribution(m_generator);
 
     if (number < 0)
         number = 0;
@@ -93,103 +124,21 @@ int EmisorParticula::randomParticleCount()
     return number;
 }
 
-
-// Crea nuevas partículas
-void EmisorParticula::emit()
+std::vector<Particle*> EmisorParticula::emit()
 {
-    int numberParticles =
-        randomParticleCount();
+    std::vector<Particle*> particles;
 
-    for (int i = 0; i < numberParticles; i++)
+    int number = randomParticleCount();
+
+    for (int i = 0; i < number; i++)
     {
-        Vector3D velocity =
-            randomVelocity();
+        Particle* particle = m_model->clone(
+            randomPosition(),
+            randomVelocity()
+        );
 
-        Particle* particle =
-            new Particle(
-                m_position,
-                velocity,
-                m_acceleration,
-                m_size,
-                m_mass,
-                m_color,
-                m_damping,
-                m_life
-            );
-
-        m_particles.push_back(particle);
-
-        // Asocia la partícula a los generadores
-        for (ForceGenerator* generator : m_forceGenerators)
-        {
-            m_forceRegistry.add(
-                particle,
-                generator
-            );
-        }
-    }
-}
-
-
-// Cambia la aceleración constante
-void EmisorParticula::setAcceleration(
-    const Vector3D& acceleration
-)
-{
-    m_acceleration = acceleration;
-}
-
-
-// Elimina partículas muertas o demasiado lejanas
-void EmisorParticula::removeDeadParticles()
-{
-    for (auto it = m_particles.begin();
-        it != m_particles.end(); )
-    {
-        Particle* p = *it;
-
-        Vector3D distance =
-            p->getPosition() - m_position;
-
-        bool outside =
-            distance.magnitude() > m_maxDistance;
-
-        if (!p->isAlive() || outside)
-        {
-            m_forceRegistry.remove(p);
-
-            delete p;
-
-            it = m_particles.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
-}
-
-
-// Actualiza emisión, fuerzas e integración
-void EmisorParticula::update(float dt)
-{
-    emit();
-
-    m_forceRegistry.updateForces(dt);
-
-    for (Particle* p : m_particles)
-    {
-        p->integrate(dt);
+        particles.push_back(particle);
     }
 
-    removeDeadParticles();
-}
-
-
-// Añade un generador de fuerzas
-void EmisorParticula::addForceGenerator(
-    ForceGenerator* generator
-)
-{
-    m_forceGenerators.push_back(generator);
+    return particles;
 }

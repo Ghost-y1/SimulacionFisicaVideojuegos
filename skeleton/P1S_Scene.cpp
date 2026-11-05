@@ -1,60 +1,63 @@
 #include "P1S_Scene.h"
-#include <iostream>
-
 
 void P1S_Scene::init()
 {
-    recalcularParametros();
-}
+    // Proyectil 1
+    m_bullet = {
+        0.01f,
+        400.0f,
+        40.0f,
+        9.81f,
+        0.15f,
+        0.99f,
+        Vector4(1.0f, 1.0f, 0.0f, 1.0f)
+    };
 
+    // Proyectil 2
+    m_ball = {
+        0.06f,
+        50.0f,
+        15.0f,
+        9.81f,
+        0.35f,
+        0.98f,
+        Vector4(1.0f, 0.0f, 0.0f, 1.0f)
+    };
+}
 
 void P1S_Scene::update(double dt)
 {
-    for (Particle* p : proyectiles)
-    {
-        p->integrate(dt);
-    }
+    for (Projectile* p : m_projectiles)
+        p->integrate((float)dt);
 }
 
-
-void P1S_Scene::keyPress( unsigned char key, const physx::PxTransform& camera)
+void P1S_Scene::keyPress(
+    unsigned char key,
+    const physx::PxTransform& camera
+)
 {
     if (key == 'j' || key == 'J')
-    {
-        Vector3D gravedad( 0.0f, -gravedadSimulada, 0.0f);
-        disparaProyectil(velocidadSimulada, gravedad);
-    }
+        shoot(m_bullet);
+
+    if (key == 'k' || key == 'K')
+        shoot(m_ball);
 }
 
+void P1S_Scene::shoot(const ProjectileData& data)
+{
+    Projectile* projectile = new Projectile(
+        GetCamera()->getEye(),
+        GetCamera()->getDir(),
+        data
+    );
+
+    m_projectiles.push_back(projectile);
+}
 
 void P1S_Scene::cleanup()
 {
-    for (Particle* p : proyectiles)
-    {
+    for (Projectile* p : m_projectiles)
         delete p;
-    }
 
-    proyectiles.clear();
-}
-
-
-void P1S_Scene::disparaProyectil(float speed,Vector3D acceleration)
-{
-    Vector3D position = GetCamera()->getEye();
-
-    Vector3D velocity = GetCamera()->getDir() * speed;
-
-    Particle* p = new Particle(position,velocity,acceleration, masaSimulada, 0.5f, Vector4(1.0f,1.0f,0.5f,1.0f));
-
-    proyectiles.push_back(p);
-}
-
-
-void P1S_Scene::recalcularParametros()
-{
-    float factor = velocidadSimulada / velocidadReal;
-
-    masaSimulada = masaReal / (factor * factor);
-
-    gravedadSimulada = 9.81f * factor * factor;
+    m_projectiles.clear();
 }

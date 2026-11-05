@@ -3,10 +3,11 @@
 #include "Vector3D.h"
 #include "RenderUtils.hpp"
 
+class ForceGenerator;
+
 class Particle
 {
 public:
-
     Particle(
         Vector3D position,
         Vector3D velocity,
@@ -15,34 +16,34 @@ public:
         float mass = 1.0f,
         Vector4 color = Vector4(1.0f, 0.0f, 0.0f, 1.0f),
         float damping = 1.0f,
-        float life = 5.0f
+        float life = 5.0f,
+        bool render = true
     );
 
-    ~Particle();
+    virtual ~Particle();
 
     void integrate(float dt);
 
-    // Fuerzas
+    // Gestión de fuerzas
     void addForce(const Vector3D& force);
     void clearForces();
+    void applyForceGenerator(ForceGenerator* generator, float dt);
 
-    // Getters necesarios para los generadores
+    // Crea una copia a partir de la partícula modelo
+    Particle* clone(Vector3D position, Vector3D velocity) const;
+
+    bool isAlive() const;
+
     Vector3D getPosition() const;
     Vector3D getVelocity() const;
 
     float getMass() const;
-
-    bool isAlive() const;
+    float getSize() const;
 
 private:
-
     Vector3D m_position;
     Vector3D m_velocity;
-
-    // Aceleración constante independiente de fuerzas
     Vector3D m_acceleration;
-
-    // Fuerzas acumuladas durante el frame
     Vector3D m_forceAccum;
 
     Vector4 m_color;
@@ -50,7 +51,6 @@ private:
     float m_size;
     float m_mass;
     float m_damping;
-
     float m_age;
     float m_life;
 

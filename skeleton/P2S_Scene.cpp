@@ -1,107 +1,117 @@
 #include "P2S_Scene.h"
 
-
 void P2S_Scene::init()
 {
-    // EMISOR 1 FUENTE
+    m_system = new ParticleSystem();
 
-    EmisorParticula* fuente = new EmisorParticula(
-        Vector3D(-7.0f, 0.0f, 0.0f),     // posición
-
-        Vector3D(0.0f, 10.0f, 0.0f),     // velocidad media
-
-        Vector3D(1.5f, 1.0f, 1.5f),      // desviación velocidad
-
-        Vector4(0.0f, 0.5f, 1.0f, 1.0f), // azul
-
-        0.20f,                            // tamaño
-        1.0f,                             // masa
-        4.0f,                             // vida
-
-        2,                                // partículas/frame
-        1,                                // variación
-
-        0.99f,                            // damping
-        30.0f                             // distancia máxima
+    m_gravity = new GravityGenerator(
+        Vector3D(0.0f, -10.0f, 0.0f)
     );
 
-    m_emitters.push_back(fuente);
-
-
-
-    // EMISOR 2 - CHORRO MANGUERA
-
-    EmisorParticula* manguera = new EmisorParticula(
-        Vector3D(0.0f, 5.0f, 0.0f),
-
-        // principalmente hacia +X
-        Vector3D(10.0f, 4.0f, 0.0f),
-
-        // pequeña dispersión
-        Vector3D(1.0f, 1.0f, 1.0f),
-
-        Vector4(0.0f, 1.0f, 1.0f, 1.0f),
-
+    // Modelo azul
+    Particle* waterModel = new Particle(
+        Vector3D(),
+        Vector3D(),
+        Vector3D(),
         0.15f,
         1.0f,
-        3.0f,
-
-        3,
-        1,
-
+        Vector4(0.0f, 0.5f, 1.0f, 1.0f),
         0.99f,
-        30.0f
+        5.0f,
+        false
     );
 
-    m_emitters.push_back(manguera);
-
-
-
-    // EMISOR 3 CHISPAS
-
-    EmisorParticula* chispas = new EmisorParticula(
-        Vector3D(7.0f, 0.0f, 0.0f),
-
-        // salen principalmente hacia arriba
-        Vector3D(0.0f, 12.0f, 0.0f),
-
-        // mucha dispersión
-        Vector3D(5.0f, 2.0f, 5.0f),
-
-        Vector4(1.0f, 0.5f, 0.0f, 1.0f),
-
+    // Modelo amarillo
+    Particle* sparkModel = new Particle(
+        Vector3D(),
+        Vector3D(),
+        Vector3D(),
         0.10f,
-        1.0f,
-        2.0f,
-
-        4,
-        2,
-
+        0.5f,
+        Vector4(1.0f, 0.6f, 0.0f, 1.0f),
         0.98f,
-        30.0f
+        3.0f,
+        false
     );
 
-    m_emitters.push_back(chispas);
+    // Modelo de niebla
+    Particle* fogModel = new Particle(
+        Vector3D(),
+        Vector3D(),
+        Vector3D(0.0f, 0.5f, 0.0f),
+        0.20f,
+        0.2f,
+        Vector4(0.7f, 0.7f, 0.7f, 0.5f),
+        1.0f,
+        8.0f,
+        false
+    );
+
+    // Distribución uniforme
+    m_uniformEmitter = new EmisorParticula(
+        waterModel,
+        Vector3D(-8.0f, 0.0f, 0.0f),
+        Vector3D(0.5f, 0.0f, 0.5f),
+        Vector3D(0.0f, 10.0f, 0.0f),
+        Vector3D(1.0f, 1.0f, 1.0f),
+        DistributionType::Uniform,
+        2,
+        1
+    );
+
+    // Distribución gaussiana
+    m_gaussianEmitter = new EmisorParticula(
+        sparkModel,
+        Vector3D(0.0f, 0.0f, 0.0f),
+        Vector3D(1.0f, 0.2f, 1.0f),
+        Vector3D(0.0f, 12.0f, 0.0f),
+        Vector3D(4.0f, 2.0f, 4.0f),
+        DistributionType::Gaussian,
+        3,
+        1
+    );
+
+    // Niebla
+    m_fogEmitter = new EmisorParticula(
+        fogModel,
+        Vector3D(8.0f, 2.0f, 0.0f),
+        Vector3D(5.0f, 1.0f, 5.0f),
+        Vector3D(0.0f, 0.2f, 0.0f),
+        Vector3D(0.2f, 0.2f, 0.2f),
+        DistributionType::Uniform,
+        2,
+        1
+    );
+
+    m_system->addEmitter(m_uniformEmitter);
+    m_system->addEmitter(m_gaussianEmitter);
+    m_system->addEmitter(m_fogEmitter);
+
+    m_system->addForceGenerator(m_gravity);
 }
 
 void P2S_Scene::update(double dt)
 {
-    for (EmisorParticula* emitter : m_emitters)
-    {
-        emitter->update((float)dt);
-    }
+    m_system->update((float)dt);
 }
 
-void P2S_Scene::keyPress( unsigned char key, const physx::PxTransform& camera)
+void P2S_Scene::keyPress(
+    unsigned char key,
+    const physx::PxTransform& camera
+)
 {
 }
 
 void P2S_Scene::cleanup()
 {
-    for (EmisorParticula* emitter : m_emitters)
-    {
-        delete emitter;
-    }
+    delete m_system;
+    m_system = nullptr;
 
-    m_emitters.clear();
+    delete m_gravity;
+    m_gravity = nullptr;
+
+    // Los emisores los destruye ParticleSystem
+    m_uniformEmitter = nullptr;
+    m_gaussianEmitter = nullptr;
+    m_fogEmitter = nullptr;
 }
